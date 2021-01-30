@@ -14,13 +14,13 @@ page <- RCurl::getURL(url,
                       useragent = str_c(R.version$platform,
                                         R.version$version.string,
                                         sep = ", "),
-                      httpheader = c(From = "tomas.ruzza.12@gmail.com"))
+                      httpheader = c(From = "********@****.***")) #put your email in.
 
 #Saving the page
 download.file(url, destfile = "plastica.html")
 
 #Get links
-links <- as_tibble(XML::getHTMLLinks(page))
+links <- as_tibble(XML::getHTMLLinks(here::here("plastica.html")))
 
 
 

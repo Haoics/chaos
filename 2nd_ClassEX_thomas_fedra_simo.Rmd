@@ -6,46 +6,54 @@ output: html_document
 ---
 # WEB SCRAPING 
 
+The first part of the script is about web scraping. We have assigned the url of the article to an object called url, and then we have checked the robots.txt file. It said to us that we are not allowed to scrape the admin section of the web site, for the rest there were not problems.
+After this quick check we have made a polite request with the funciron getURL by the package RCurl:: to identify ourself to the server. 
+In conclusion of this fist phase we have downloaded the html file to work in local to get the 105 links in the page with function getHTMLlinks by the package XML::.
+
 ```{r setup, eval = FALSE}
 library(tidyverse)
 library(rvest)
 library(stringr)
-setwd("/Users/tomasruzza/Documents/Projects/R/Data Access/CE2_thomas_fedra_simo")
 
 url <- "http://www.beppegrillo.it/un-mare-di-plastica-ci-sommergera/"
 browseURL(url)
 
 #robots.txt check
-browseURL("http://www.beppegrillo.it/robots.txt")
+#browseURL("http://www.beppegrillo.it/robots.txt")
 
 #file downloading
 page <- RCurl::getURL(url, 
-                      useragent = str_c(R.version$platform,
-                                        R.version$version.string,
-                                        sep = ", "),
-                      httpheader = c(From = "xxxx@xxxx.xxx")) #put in your e-mail address
+               useragent = str_c(R.version$platform,
+                   R.version$version.string,sep = ", "),
+                  httpheader = c(From = "xxxx@xxxx.xxx")) #your e-mail address
 
 #Saving the page
 download.file(url, destfile = "plastica.html")
 
 #Get links
-links <- as_tibble(XML::getHTMLLinks(page))
+links <- as_tibble(XML::getHTMLLinks(here::here("plastica.html")))
 
 ```
 
 # FOR LOOP
 
+Now the game starts to get complex, but we never give up. Now we had to get all the links to the articles of the year 2016. The amount of them is 470 articles distributed homogeniuxly in 47 pages: 10 articles per page.
+The first step was to get a list of the links of the pages. To do that we have played with the links. In fact, each link differs from the others just by the number of the page at the end of the link. Therefore, we get those links with the str_c function by the package stringr::. Easy, but after this point the problems started. We had to make a loop to make the process of getting the links automated. To do this we hat to create an empty list of lists with the function of container. With a combination of the rep(replicate) and vector functions we have created an empty list ("sut") containing 47 sublists. In each list of the "magic 47" we have created 10 empty spaces in which put the links to the articles. 
 ```{r, eval = FALSE}
 link_to_pages <- str_c("https://www.beppegrillo.it/category/archivio/2016/page/", 1:47, "/")
 link_to_pages
 sut <-  rep(list(vector(mode ="list", length = 10)), 47)
 sut
-
+```
+At this point it was time to create the for loop to get the links. We spliced it into two parts. The fist part was about the download of the 47 pages to work later in local. Therefore we have used the download.file function in combination with str_c function to download the pages and to get them a progressive numeration. In addition we have used the Sys.sleep function, set to one second, for politeness reasons. Came at this point we were ready to get all the links we need with another for loop. In the end we have unslisted the object and we obtained a vector with all the 470 links. 
+```{r, eval = FALSE}
 dir.create("download_beppe")
 
 for (i in seq_along(link_to_pages)) {
+  
   download.file(url = link_to_pages[i], destfile = here::here("download_beppe", str_c("art", i, ".html")))
   Sys.sleep(1)
+  
 }
 
 for(x in 1:47){
@@ -56,7 +64,10 @@ for(x in 1:47){
 
 art <- unlist(sut)
 art
-
+```
+To do the last part of the exercise and get the main texts of each article we took a similar way to the previous one with the creation of an empty list of lists. A preliminary consideration is that we have interpreted  the wording "main text" as the part of the page where the text of the articles is actually contained. Often in this part of the web pages there are You Tube players. They will appear in the text as links contained in the main text of the articles. 
+Moreover, it is possible that if in some articles there are not text part, they would be substituted by the YT players which will appear in our list as links.
+```{r, eval = FALSE}
 out <- rep(list(vector(mode ="list", length = 10)), 47)
 
 for(z in 1:470){
@@ -65,7 +76,7 @@ for(z in 1:470){
     html_text()
 }
 
-out
+#out
 
 ```
 
