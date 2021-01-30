@@ -1,0 +1,82 @@
+---
+title: "2nd_ClassEX_thomas_fedra_simo"
+author: "Fedra Ippolito"
+date: "30/1/2021"
+output: html_document
+---
+# WEB SCRAPING 
+
+```{r setup, eval = FALSE}
+library(tidyverse)
+library(rvest)
+library(stringr)
+setwd("/Users/tomasruzza/Documents/Projects/R/Data Access/CE2_thomas_fedra_simo")
+
+url <- "http://www.beppegrillo.it/un-mare-di-plastica-ci-sommergera/"
+browseURL(url)
+
+#robots.txt check
+browseURL("http://www.beppegrillo.it/robots.txt")
+
+#file downloading
+page <- RCurl::getURL(url, 
+                      useragent = str_c(R.version$platform,
+                                        R.version$version.string,
+                                        sep = ", "),
+                      httpheader = c(From = "xxxx@xxxx.xxx")) #put in your e-mail address
+
+#Saving the page
+download.file(url, destfile = "plastica.html")
+
+#Get links
+links <- as_tibble(XML::getHTMLLinks(page))
+
+```
+
+# FOR LOOP
+
+```{r, eval = FALSE}
+link_to_pages <- str_c("https://www.beppegrillo.it/category/archivio/2016/page/", 1:47, "/")
+link_to_pages
+sut <-  rep(list(vector(mode ="list", length = 10)), 47)
+sut
+
+dir.create("download_beppe")
+
+for (i in seq_along(link_to_pages)) {
+  download.file(url = link_to_pages[i], destfile = here::here("download_beppe", str_c("art", i, ".html")))
+  Sys.sleep(1)
+}
+
+for(x in 1:47){
+  sut[[x]][1:10] <- read_html(here::here("download_beppe", str_c("art", x, ".html"))) %>% 
+  html_nodes(".td_module_10 .td-module-title a") %>% 
+  html_attr("href")
+}
+
+art <- unlist(sut)
+art
+
+out <- rep(list(vector(mode ="list", length = 10)), 47)
+
+for(z in 1:470){
+  out[[z]] <- read_html(art[z]) %>% 
+    html_nodes(".rs_preserve+ div") %>% 
+    html_text()
+}
+
+out
+
+```
+
+
+## What does it means to "crawl" and what is a web spider?
+
+The verb crawl means to collect web pages, but a web crawler can also perform data extraction during crawling. Usually web spiders are programs that automatically browse and download pages by following hyperlinks in a methodical and automated manner. Web crawler and web spider are used like synonyms. 
+
+## How is it different from scraping?
+
+The activity of web scraping cocerns only the extraction of data from a website, in fact our scraping was built from two steps: parsing and extracting contents from URLs. This process was manually done, instead the crawling is an automated method. Moreover we have tryed to authomize the process of web scraping adding the for loop. 
+
+## Try to build a spider scraper: what functions should you use?
+
