@@ -2,7 +2,9 @@
 title: "2nd_ClassEX_thomas_fedra_simo"
 author: "Fedra Ippolito"
 date: "30/1/2021"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 # WEB SCRAPING 
 
@@ -70,7 +72,7 @@ art
 ```
 To do the last part of the exercise and get the main texts of each article we took a similar way to the previous one with the creation of an empty list of lists. A preliminary consideration is that we have interpreted  the wording "main text" as the part of the page where the text of the articles is actually contained. Often in this part of the web pages there are You Tube players. They will appear in the text as links contained in the main text of the articles. 
 Moreover, it is possible that if in some articles there are not text part, they would be substituted by the YT players which will appear in our list as links.
-```{r, message = FALSE, eval = false}
+```{r, message = FALSE, eval = FALSE}
 out <- rep(list(vector(mode ="list", length = 10)), 47)
 
 for(z in 1:470){
@@ -82,7 +84,7 @@ for(z in 1:470){
 out
 
 ```
-
+**_NOTE: outputs have been hidden for easier reading. In fact, often they are long lists of characters or articles, as in the case just above, that would have made it tedious to scroll through the report._**
 
 ## What does it means to "crawl" and what is a web spider?
 
