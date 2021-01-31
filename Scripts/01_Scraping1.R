@@ -1,9 +1,6 @@
-library(tidyverse)
-library(rvest)
-library(stringr)
-setwd("/Users/tomasruzza/Documents/Projects/R/Data Access/CE2_thomas_fedra_simo")
 
-url <- "http://www.beppegrillo.it/un-mare-di-plastica-ci-sommergera/"
+#cretion url object
+url <- "http://www.beppegrillo.it/un-mare-di-plastica-ci-sommergera/"  
 browseURL(url)
 
 #robots.txt check
@@ -14,10 +11,10 @@ page <- RCurl::getURL(url,
                       useragent = str_c(R.version$platform,
                                         R.version$version.string,
                                         sep = ", "),
-                      httpheader = c(From = "tomas.ruzza.12@gmail.com"))
+                      httpheader = c(From = "********@****.***")) #put your email in.
 
 #Saving the page
-download.file(url, destfile = "plastica.html")
+download.file(url, destfile = "./File download/plastica.html")
 
 #Get links
 links <- as_tibble(XML::getHTMLLinks(page))
