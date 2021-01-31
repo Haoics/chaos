@@ -6,13 +6,13 @@ sut
 
 #download pages
 for (i in seq_along(link_to_pages)) {
-  download.file(url = link_to_pages[i], destfile = here::here("download_beppe", str_c("art", i, ".html")))
+  download.file(url = link_to_pages[i], destfile = here::here("File download", str_c("art", i, ".html")))
   Sys.sleep(1)
 }
 
 #get links
 for(x in 1:47){
-  sut[[x]][1:10] <- read_html(here::here("download_beppe", str_c("art", x, ".html"))) %>% 
+  sut[[x]][1:10] <- read_html(here::here("File download", str_c("art", x, ".html"))) %>% 
   html_nodes(".td_module_10 .td-module-title a") %>% 
   html_attr("href")
 }

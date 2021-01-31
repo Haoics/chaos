@@ -1,6 +1,6 @@
 library(tidyverse)
 library(rvest)
 library(stringr)
-#dir.create("download_beppe")
+#dir.create("File download")
 #dir.create("Scripts")
 #dir.create("Report")
