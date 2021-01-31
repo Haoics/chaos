@@ -1,0 +1,6 @@
+library(tidyverse)
+library(rvest)
+library(stringr)
+#dir.create("download_beppe")
+#dir.create("Scripts")
+#dir.create("Report")

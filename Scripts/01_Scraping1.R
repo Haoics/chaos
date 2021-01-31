@@ -1,9 +1,6 @@
-library(tidyverse)
-library(rvest)
-library(stringr)
-setwd("/Users/tomasruzza/Documents/Projects/R/Data Access/CE2_thomas_fedra_simo")
 
-url <- "http://www.beppegrillo.it/un-mare-di-plastica-ci-sommergera/"
+#cretion url object
+url <- "http://www.beppegrillo.it/un-mare-di-plastica-ci-sommergera/"  
 browseURL(url)
 
 #robots.txt check
@@ -20,7 +17,7 @@ page <- RCurl::getURL(url,
 download.file(url, destfile = "plastica.html")
 
 #Get links
-links <- as_tibble(XML::getHTMLLinks(here::here("plastica.html")))
+links <- as_tibble(XML::getHTMLLinks(page))
 
 
 
