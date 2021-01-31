@@ -95,7 +95,13 @@ The verb crawl means to collect web pages, but a web crawler can also perform da
 
 ## How is it different from scraping?
 
-The activity of web scraping cocerns only the extraction of data from a website, in fact our scraping was built from two steps: parsing and extracting contents from URLs. This process was manually done, instead the crawling is an automated method. Moreover we have tryed to authomize the process of web scraping adding the for loop. 
+The activity of web scraping concerns only the extraction of data from a website, in fact our scraping was built from two steps: parsing and extracting contents from URLs. This process was manually done, instead the crawling is an automated method. Moreover we have tryed to authomize the process of web scraping adding the for loop. 
 
 ## Try to build a spider scraper: what functions should you use?
 
+Rcrawler(Website = "https://www.beppegrillo.it/", no_cores = 4, no_conn = 4,
+            dataUrlfilter ="./category/archivio/2016/", crawlUrlfilter="./category/archivio/2016/",
+            ExtractCSSPat = c(".td_module_10 .td-module-title a",".td-excerpt"),
+            PatternsNames = c("Title","Content"))
+
+dataUrlfilter , crawlUrlfilter <- are useful to filter URLs to be crawled and collected by Regex
