@@ -31,6 +31,5 @@ for(z in 1:470){
 }
 
 out
-#checka
 
 
