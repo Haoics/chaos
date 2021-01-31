@@ -226,20 +226,23 @@ links &lt;- as_tibble(XML::getHTMLLinks(page))</code></pre>
 <div id="for-loop" class="section level1">
 <h1>FOR LOOP</h1>
 <p>Now the game starts to get complex, but we never give up. Now we had to get all the links to the articles of the year 2016. The amount of them is 470 articles distributed homogeniuxly in 47 pages: 10 articles per page. The first step was to get a list of the links of the pages. To do that we have played with the links. In fact, each link differs from the others just by the number of the page at the end of the link. Therefore, we get those links with the str_c function by the package stringr::. Easy, but after this point the problems started. We had to make a loop to make the process of getting the links automated. To do this we hat to create an empty list of lists with the function of container. With a combination of the rep(replicate) and vector functions we have created an empty list (“sut”) containing 47 sublists. In each list of the “magic 47” we have created 10 empty spaces in which put the links to the articles.</p>
-<pre class="r"><code>link_to_pages &lt;- str_c(&quot;https://www.beppegrillo.it/category/archivio/2016/page/&quot;, 1:47, &quot;/&quot;)
+<pre class="r"><code>link_to_pages &lt;- str_c(&quot;https://www.beppegrillo.it/category/archivio/2016/page/&quot;, 
+                       1:47, &quot;/&quot;)
 link_to_pages
 sut &lt;-  rep(list(vector(mode =&quot;list&quot;, length = 10)), 47)
 sut</code></pre>
 <p>At this point it was time to create the for loop to get the links. We spliced it into two parts. The fist part was about the download of the 47 pages to work later in local. Therefore we have used the download.file function in combination with str_c function to download the pages and to get them a progressive numeration. In addition we have used the Sys.sleep function, set to one second, for politeness reasons. Came at this point we were ready to get all the links we need with another for loop. In the end we have unslisted the object and we obtained a vector with all the 470 links.</p>
 <pre class="r"><code>for (i in seq_along(link_to_pages)) {
   
-  download.file(url = link_to_pages[i], destfile = here::here(&quot;File download&quot;, str_c(&quot;art&quot;, i, &quot;.html&quot;)))
+  download.file(url = link_to_pages[i], 
+                destfile = here::here(&quot;File download&quot;, str_c(&quot;art&quot;, i, &quot;.html&quot;)))
   Sys.sleep(1)
   
 }
 
 for(x in 1:47){
-  sut[[x]][1:10] &lt;- read_html(here::here(&quot;File download&quot;, str_c(&quot;art&quot;, x, &quot;.html&quot;))) %&gt;% 
+  sut[[x]][1:10] &lt;- read_html(here::here(&quot;File download&quot;,
+                                         str_c(&quot;art&quot;, x, &quot;.html&quot;))) %&gt;% 
   html_nodes(&quot;.td_module_10 .td-module-title a&quot;) %&gt;% 
   html_attr(&quot;href&quot;)
 }

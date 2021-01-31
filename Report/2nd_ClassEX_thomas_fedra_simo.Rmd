@@ -45,7 +45,8 @@ links <- as_tibble(XML::getHTMLLinks(page))
 Now the game starts to get complex, but we never give up. Now we had to get all the links to the articles of the year 2016. The amount of them is 470 articles distributed homogeniuxly in 47 pages: 10 articles per page.
 The first step was to get a list of the links of the pages. To do that we have played with the links. In fact, each link differs from the others just by the number of the page at the end of the link. Therefore, we get those links with the str_c function by the package stringr::. Easy, but after this point the problems started. We had to make a loop to make the process of getting the links automated. To do this we hat to create an empty list of lists with the function of container. With a combination of the rep(replicate) and vector functions we have created an empty list ("sut") containing 47 sublists. In each list of the "magic 47" we have created 10 empty spaces in which put the links to the articles. 
 ```{r, message = FALSE, eval = FALSE}
-link_to_pages <- str_c("https://www.beppegrillo.it/category/archivio/2016/page/", 1:47, "/")
+link_to_pages <- str_c("https://www.beppegrillo.it/category/archivio/2016/page/", 
+                       1:47, "/")
 link_to_pages
 sut <-  rep(list(vector(mode ="list", length = 10)), 47)
 sut
@@ -56,13 +57,15 @@ At this point it was time to create the for loop to get the links. We spliced it
 
 for (i in seq_along(link_to_pages)) {
   
-  download.file(url = link_to_pages[i], destfile = here::here("File download", str_c("art", i, ".html")))
+  download.file(url = link_to_pages[i], 
+                destfile = here::here("File download", str_c("art", i, ".html")))
   Sys.sleep(1)
   
 }
 
 for(x in 1:47){
-  sut[[x]][1:10] <- read_html(here::here("File download", str_c("art", x, ".html"))) %>% 
+  sut[[x]][1:10] <- read_html(here::here("File download",
+                                         str_c("art", x, ".html"))) %>% 
   html_nodes(".td_module_10 .td-module-title a") %>% 
   html_attr("href")
 }
